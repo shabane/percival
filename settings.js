@@ -15,3 +15,8 @@ exports.max_link_char = 128;
 
 exports.max_user_link_char = 128;
 
+exports.file_expire_days = 1;
+
+exports.text_expire_days = 1;
+
+exports.link_expire_days = 1;
