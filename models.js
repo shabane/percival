@@ -9,6 +9,7 @@ exports.User = settings.sequelize.define(
             type: DataTypes.STRING(settings.max_username_char),
             allowNull: false,
             required: true,
+            unique: true,
         },
         "password": {
             type: DataTypes.STRING,
