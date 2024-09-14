@@ -16,11 +16,6 @@ exports.User = settings.sequelize.define(
             allowNull: false,
             required: true,
         },
-        "date": {
-            type: DataTypes.NOW,
-            allowNull: false,
-            required: true,
-        },
     },
     { timestamps: true },
 );
