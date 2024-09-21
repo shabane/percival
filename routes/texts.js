@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { User, Text, User_Data } = require('../models');
-
+const { debug } = require('../settings');
 
 router.get('/:id', (req, res) => {
     if (!req.cookies.username && !req.cookies.password) {
         res.status(400).send("Set Username and Password");
         return;
     }
-    //TODO: replace console.log with debug.
     User.findOne({
         where: {
             username: req.cookies.username,
@@ -37,14 +36,14 @@ router.get('/:id', (req, res) => {
                 res.send(text);
             }).catch(err => {
                 res.status(500).send("Internal Error");
-                console.log(err.message);
+                debug(err.message);
             });
         }).catch(err => {
-            console.log(err.message);
+            debug(err.message);
             res.status(500).send("Internal Error");
         });
     }).catch(err => {
-        console.log(err.message);
+        debug(err.message);
         res.status(500).send("Internal Error");
     });
 });

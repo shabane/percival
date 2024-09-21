@@ -1,4 +1,5 @@
 const { Sequelize } = require('sequelize');
+exports.debug = require('debug')('app:deployment')
 
 exports.sequelize = new Sequelize({
     dialect: "sqlite",
