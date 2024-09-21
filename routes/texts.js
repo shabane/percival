@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { User, Text, User_Data } = require('../models');
 const { debug } = require('../settings');
+const response_text = require('../utils/response_text');
+
 
 router.get('/:id', (req, res) => {
     if (!req.cookies.username && !req.cookies.password) {
-        res.status(400).send("Set Username and Password");
+        res.status(401).send(response_text["401"]);
         return;
     }
     User.findOne({
@@ -15,7 +17,7 @@ router.get('/:id', (req, res) => {
         },
     }).then(user => {
         if (!user) {
-            res.status(403).send("No Such User!");
+            res.status(401).send(response_text["401"]);
             return;
         }
         User_Data.findOne({
@@ -25,26 +27,26 @@ router.get('/:id', (req, res) => {
             }
         }).then(user_data => {
             if (!user_data) {
-                res.status(404).send("Text Not Found!");
+                res.status(404).send(response_text["404"]);
                 return;
             }
             Text.findByPk(user_data.data).then(text => {
                 if (!text) {
-                    res.status(404).send("Text Not Found!");
+                    res.status(404).send(response_text["404"]);
                     return;
                 }
                 res.send(text);
             }).catch(err => {
-                res.status(500).send("Internal Error");
+                res.status(500).send(response_text["500"]);
                 debug(err.message);
             });
         }).catch(err => {
             debug(err.message);
-            res.status(500).send("Internal Error");
+            res.status(500).send(response_text["500"]);
         });
     }).catch(err => {
         debug(err.message);
-        res.status(500).send("Internal Error");
+        res.status(500).send(response_text["500"]);
     });
 });
 
