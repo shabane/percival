@@ -3,7 +3,7 @@ const router = express.Router();
 const { User, Text, User_Data } = require('../models');
 const { debug } = require('../settings');
 const response_text = require('../utils/response_text');
-const find_user = require('../utils/find_user');
+
 
 router.get('/:id', (req, res) => {
     if (!req.cookies.username && !req.cookies.password) {
@@ -93,5 +93,25 @@ router.post('/', (req, res) => {
         return;
     });
 });
+
+
+router.put("/", (req, res) => {
+    res.status(501).send(response_text["501"]);
+});
+
+
+router.patch("/", (req, res) => {
+    res.status(501).send(response_text["501"]);
+});
+
+
+router.delete("/", (req, res) => {
+    res.status(501).send(response_text["501"]);
+});
+
+
+router.options("/", (req, res) => {
+    res.send(["POST", "GET"]);
+})
 
 exports.router = router;
