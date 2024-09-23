@@ -9,6 +9,8 @@ if (args.includes("migrate")) {
     model.Text.sync();
     model.Link.sync();
     model.User_Data.sync();
+    model.User_Link.sync();
+    model.User_File.sync();
 }
 
 if (args.includes("force-migrate")) {
