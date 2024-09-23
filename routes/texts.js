@@ -3,7 +3,7 @@ const router = express.Router();
 const { User, Text, User_Data } = require('../models');
 const { debug } = require('../settings');
 const response_text = require('../utils/response_text');
-
+const find_user = require('../utils/find_user');
 
 router.get('/:id', (req, res) => {
     if (!req.cookies.username && !req.cookies.password) {
@@ -47,6 +47,50 @@ router.get('/:id', (req, res) => {
     }).catch(err => {
         debug(err.message);
         res.status(500).send(response_text["500"]);
+    });
+});
+
+
+router.post('/', (req, res) => {
+    if (!req.cookies.username && !req.cookies.password) {
+        res.status(401).send(response_text["401"]);
+        return;
+    }
+
+    User.findOne({
+        where: {
+            username: req.body.username,
+        }
+    }).then(user => {
+        if (!user) {
+            res.status(404).send("That user does not exist!");
+            return;
+        }
+
+        Text.create({data: req.body.text}).then(text => {
+            User_Data.create({
+                user: user.id,
+                data: text.id,
+            }).then(user_data => {
+                res.send({
+                    user: user,
+                    text: text,
+                    user_data: user_data,
+                })
+            }).catch(err => {
+                debug(err);
+                res.status(500).send(response_text["500"]);
+                return;
+            });
+        }).catch(err => {
+            debug(err);
+            res.status(500).send(response_text["500"]);
+            return;
+        });
+    }).catch(err => {
+        debug(err);
+        res.status(500).send(response_text["500"]);
+        return;
     });
 });
 
