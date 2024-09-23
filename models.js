@@ -80,3 +80,43 @@ exports.User_Data = settings.sequelize.define(
     },
     { timestamps: true },
 );
+
+
+exports.User_Link = settings.sequelize.define(
+    "User_Link",
+    {
+        user: {
+            type: DataTypes.INTEGER,
+            allowNegative: false,
+            allowNull: false,
+            required: true,
+        },
+        data: {
+            type: DataTypes.INTEGER,
+            allowNegative: false,
+            allowNull: false,
+            required: true,
+        }
+    },
+    { timestamps: true },
+);
+
+
+exports.User_File = settings.sequelize.define(
+    "User_File",
+    {
+        user: {
+            type: DataTypes.INTEGER,
+            allowNegative: false,
+            allowNull: false,
+            required: true,
+        },
+        data: {
+            type: DataTypes.INTEGER,
+            allowNegative: false,
+            allowNull: false,
+            required: true,
+        }
+    },
+    { timestamps: true },
+);
