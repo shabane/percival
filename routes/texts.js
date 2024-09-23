@@ -3,6 +3,7 @@ const router = express.Router();
 const { User, Text, User_Data } = require('../models');
 const { debug } = require('../settings');
 const response_text = require('../utils/response_text');
+const find_user = require("../utils/find_user");
 
 
 router.get('/:id', (req, res) => {
@@ -113,5 +114,32 @@ router.delete("/", (req, res) => {
 router.options("/", (req, res) => {
     res.send(["POST", "GET"]);
 })
+
+
+router.get("/", (req, res) => {
+    find_user(req.cookies.username, req.cookies.password).then(user => {
+        if (!user) {
+            res.status(403).send(response_text["403"]);
+            return;
+        }
+
+        User_Data.findAll({
+            where: {
+                user: user.id,
+            }
+        }).then(user_data => {
+            res.send(user_data);
+        }).catch(err => {
+            debug(err);
+            res.status(500).send(response_text["500"]);
+            return;
+        });
+    }).catch(err => {
+        debug(err);
+        res.status(500).send(response_text["500"]);
+        return;
+    })
+});
+
 
 exports.router = router;
