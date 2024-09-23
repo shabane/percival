@@ -14,5 +14,12 @@ if (args.includes("migrate")) {
 }
 
 if (args.includes("force-migrate")) {
-    settings.sequelize.sync({ force: true });
+    force = { force: true }
+    model.User.sync(force);
+    model.File.sync(force);
+    model.Text.sync(force);
+    model.Link.sync(force);
+    model.User_Data.sync(force);
+    model.User_Link.sync(force);
+    model.User_File.sync(force);
 }
