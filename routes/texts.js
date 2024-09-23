@@ -73,7 +73,7 @@ router.post('/', (req, res) => {
                 data: text.id,
             }).then(user_data => {
                 res.send({
-                    user: user,
+                    user: user.username,
                     text: text,
                     user_data: user_data,
                 })
