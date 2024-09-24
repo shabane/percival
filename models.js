@@ -49,7 +49,6 @@ exports.Link = settings.sequelize.define(
     {
         dest: {
             type: DataTypes.STRING(settings.max_link_char),
-            unique: true,
             allowNull: false,
             required: true,
         },
