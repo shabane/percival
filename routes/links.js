@@ -118,4 +118,9 @@ router.get("/", (req, res) => {
 });
 
 
+router.options("/", (req, res) => {
+    res.send(["GET", "POST"]);
+});
+
+
 exports.router = router;
