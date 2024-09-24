@@ -58,6 +58,17 @@ router.post('/', (req, res) => {
         return;
     }
 
+    find_user(!req.cookies.username && !req.cookies.password).then(_user => {
+        if (!_user) {
+            res.status(403).send(response_text["403"]);
+            return;
+        }
+    }).catch( err => {
+        debug(err);
+        res.status(500).send(response_text["500"]);
+        return;
+    });
+
     User.findOne({
         where: {
             username: req.body.username,
