@@ -91,4 +91,31 @@ router.post("/", (req, res) => {
     });
 });
 
+
+router.get("/", (req, res) => {
+    find_user(req.cookies.username, req.cookies.password).then(user => {
+        if (!user) {
+            res.status(403).send(response_text["403"]);
+            return;
+        }
+
+        User_Link.findAll({
+            where: {
+                user: user.id,
+            }
+        }).then(user_links => {
+            res.send(user_links);
+        }).catch(err => {
+            debug(err);
+            res.status(500).send(response_text["500"]);
+            return;
+        });
+    }).catch(err => {
+        debug(err);
+        res.status(500).send(response_text["500"]);
+        return;
+    });
+});
+
+
 exports.router = router;
