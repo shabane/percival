@@ -7,6 +7,10 @@ exports.sequelize = new Sequelize({
 })
 
 exports.max_username_char = 128;
+exports.min_username_char = 3;
+
+exports.max_password_char = 256;
+exports.min_password_char = 8;
 
 exports.max_file_path_char = 128;
 
