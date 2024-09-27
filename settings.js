@@ -17,6 +17,7 @@ exports.file_dest = "./user_files";
 MB = 1024 * 1024;   // This mean MB, add another `*1024` to make it GB and so on.
 exports.max_file_size = 10 * MB;  // Set Limit to 10MB.
 exports.max_file_limit = 5; // Max number of upload files limit.
+exports.max_randint_num = 256;    // Max random int for sub dir.
 
 exports.max_link_char = 128; //TODO: create validation for this
 
