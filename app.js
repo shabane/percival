@@ -17,6 +17,6 @@ app.use(cookieParser());
 app.use('/api/text/', check_cookies, texts.router);
 app.use('/api/link/', check_cookies, links.router);
 app.use('/api/user/', users.router);
-app.use('/api/file/', files.router);
+app.use('/api/file/', check_cookies, files.router);
 
 app.listen(process.env.PORT || 3000);
