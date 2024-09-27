@@ -8,6 +8,7 @@ const {debug} = require("../settings");
 const { File, User_File } = require("../models");
 const find_user = require("../utils/find_user");
 const response_text = require("../utils/response_text");
+const path = require("path");
 
 
 //  file handler instance.
@@ -108,6 +109,48 @@ router.get("/", (req, res) => {
       res.status(500).send(response_text["500"]);
       return;
     });
+  }).catch(err => {
+    debug(err);
+    res.status(500).send(response_text["500"]);
+    return;
+  });
+});
+
+
+router.get("/:id", (req, res) => {
+  find_user(req.cookies.username, req.cookies.password).then(user => {
+    User_File.findOne({
+      where: {
+        user: user.id,
+        data: req.params.id,
+      }
+    }).then(user_file => {
+      if (!user_file) {
+        res.status(404).send(response_text["404"]);
+        return;
+      }
+
+      File.findOne({
+        where: {
+          id: user_file.id,
+        }
+      }).then(file => {
+        if (!file) {
+          res.status(404).send(response_text["404"]);
+          return;
+        }
+
+        res.sendFile(path.join(settings.base_root_dir, file.path));
+      }).catch(err => {
+        debug(err);
+        res.status(500).send(response_text["500"]);
+        return;
+      });
+    }).catch(err => {
+      debug(err.message);
+      res.status(500).send(err);
+      return;
+    })
   }).catch(err => {
     debug(err);
     res.status(500).send(response_text["500"]);
