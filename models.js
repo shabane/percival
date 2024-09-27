@@ -24,7 +24,7 @@ exports.File = settings.sequelize.define(
     "File",
     {
         path: {
-            type: DataTypes.STRING(settings.max_file_path_char),
+            type: DataTypes.STRING(settings.max_file_name_char),
             allowNull: false,
             required: true,
         },
