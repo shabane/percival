@@ -89,4 +89,30 @@ router.post("/", file_upload_handler.array("files"  ), (req, res, next) => {
   });
 });
 
+
+router.get("/", (req, res) => {
+  find_user(req.cookies.username, req.cookies.password).then(user => {
+    if (!user) {
+      res.status(403).send(response_text["403"]);
+      return;
+    }
+
+    User_File.findAll({
+      where: {
+        user: user.id,
+      }
+    }).then(user_file => {
+      res.send(user_file);
+    }).catch(err => {
+      debug(err);
+      res.status(500).send(response_text["500"]);
+      return;
+    });
+  }).catch(err => {
+    debug(err);
+    res.status(500).send(response_text["500"]);
+    return;
+  });
+});
+
 exports.router = router;
