@@ -28,3 +28,5 @@ exports.file_expire_days = 1;
 exports.text_expire_days = 1;
 
 exports.link_expire_days = 1;
+
+exports.base_root_dir = __dirname;
