@@ -4,17 +4,15 @@ const { User, Text, User_Data } = require('../models');
 const { debug } = require('../settings');
 const response_text = require('../utils/response_text');
 const find_user = require("../utils/find_user");
+const auth = require("basic-auth");
 
 
 router.get('/:id', (req, res) => {
-    if (!req.cookies.username && !req.cookies.password) {
-        res.status(401).send(response_text["401"]);
-        return;
-    }
+    const user = auth(req);
     User.findOne({
         where: {
-            username: req.cookies.username,
-            password: req.cookies.password,
+            username: user.name,
+            password: user.pass,
         },
     }).then(user => {
         if (!user) {
@@ -53,12 +51,8 @@ router.get('/:id', (req, res) => {
 
 
 router.post('/', (req, res) => {
-    if (!req.cookies.username && !req.cookies.password) {
-        res.status(401).send(response_text["401"]);
-        return;
-    }
-
-    find_user(!req.cookies.username && !req.cookies.password).then(_user => {
+    const user = auth(req);
+    find_user(user.name, user.pass).then(_user => {
         if (!_user) {
             res.status(403).send(response_text["403"]);
             return;
@@ -128,7 +122,8 @@ router.options("/", (req, res) => {
 
 
 router.get("/", (req, res) => {
-    find_user(req.cookies.username, req.cookies.password).then(user => {
+    const user = auth(req);
+    find_user(user.name, user.pass).then(user => {
         if (!user) {
             res.status(403).send(response_text["403"]);
             return;
