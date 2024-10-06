@@ -4,10 +4,12 @@ const find_user = require("../utils/find_user");
 const response_text = require("../utils/response_text");
 const { Link, User_Link, User } = require("../models");
 const {debug} = require("../settings");
+const auth = require("basic-auth");
 
 
 router.get("/:id", (req, res) => {
-    find_user(req.cookies.username, req.cookies.password).then(user => {
+    const user = auth(req);
+    find_user(user.name, user.pass).then(user => {
         if (!user) {
             res.status(403).send(response_text["403"]);
             return;
@@ -45,7 +47,8 @@ router.get("/:id", (req, res) => {
 
 
 router.post("/", (req, res) => {
-    find_user(req.cookies.username, req.cookies.password).then(_user => {
+    const user = auth(req);
+    find_user(user.name, user.pass).then(_user => {
         if (!_user) {
             res.status(403).send(response_text["403"]);
             return;
@@ -62,38 +65,43 @@ router.post("/", (req, res) => {
             }
 
             Link.create({
-                dest: req.body.link,
+                dest: req.body.dest,
             }).then(link => {
                 User_Link.create({
                     user: user.id,
                     data: link.id,
-                });
-
-                res.send({
-                    user: user.username,
-                    link: Link,
-                    user_link: User_Link,
+                }).then(user_link => {
+                    res.send({
+                        user: user.username,
+                        link: link,
+                        user_link: user_link,
+                    });
+                }).catch(err => {
+                    debug(err);
+                    res.status(500).send(err.message);
+                    return;
                 });
             }).catch(err => {
                 debug(err);
-                res.status(500).send(response_text["500"]);
+                res.status(500).send(err.message);
                 return;
             });
         }).catch(err => {
             debug(err);
-            res.status(500).send(response_text["500"]);
+            res.status(500).send(err.message);
             return;
         });
     }).catch(err => {
         debug(err);
-        res.status(500).send(response_text["500"]);
+        res.status(500).send(err.message);
         return;
     });
 });
 
 
 router.get("/", (req, res) => {
-    find_user(req.cookies.username, req.cookies.password).then(user => {
+    const user = auth(req);
+    find_user(user.name, user.pass).then(user => {
         if (!user) {
             res.status(403).send(response_text["403"]);
             return;
