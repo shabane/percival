@@ -9,6 +9,7 @@ const { File, User_File } = require("../models");
 const find_user = require("../utils/find_user");
 const response_text = require("../utils/response_text");
 const path = require("path");
+const auth = require("basic-auth");
 
 
 //  file handler instance.
@@ -42,7 +43,8 @@ let file_upload_handler = multer({
 
 
 router.post("/", file_upload_handler.array("files"  ), (req, res, next) => {
-  find_user(req.cookies.username, req.cookies.password).then(user => {
+  const user = auth(req);
+  find_user(user.name, user.pass).then(user => {
     if (!user) {
       res.status(403).send(response_text["403"]);
       return;
@@ -92,7 +94,8 @@ router.post("/", file_upload_handler.array("files"  ), (req, res, next) => {
 
 
 router.get("/", (req, res) => {
-  find_user(req.cookies.username, req.cookies.password).then(user => {
+  const user = auth(req);
+  find_user(user.name, user.pass).then(user => {
     if (!user) {
       res.status(403).send(response_text["403"]);
       return;
@@ -118,7 +121,8 @@ router.get("/", (req, res) => {
 
 
 router.get("/:id", (req, res) => {
-  find_user(req.cookies.username, req.cookies.password).then(user => {
+  const user = auth(req);
+  find_user(user.name, user.pass).then(user => {
     User_File.findOne({
       where: {
         user: user.id,
