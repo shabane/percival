@@ -5,7 +5,7 @@ const { randInt } = require("../utils/base");
 const router = express.Router();
 const fs = require("fs");
 const {debug} = require("../settings");
-const { File, User_File } = require("../models");
+const { File, User_File, User} = require("../models");
 const find_user = require("../utils/find_user");
 const response_text = require("../utils/response_text");
 const path = require("path");
@@ -44,48 +44,64 @@ let file_upload_handler = multer({
 
 router.post("/", file_upload_handler.array("files"  ), (req, res, next) => {
   const user = auth(req);
-  find_user(user.name, user.pass).then(user => {
-    if (!user) {
-      res.status(403).send(response_text["403"]);
+
+  User.findOne({
+    where: {
+      username: req.query.toUser,
+    }
+  }).then((toUser) => {
+    if (!toUser) {
+      res.status(400).send("User you send files to does not exist!");
       return;
     }
 
-    let files = [];
-    let filePromises = [];
+    find_user(user.name, user.pass).then(user => {
+      if (!user) {
+        res.status(403).send(response_text["403"]);
+        return;
+      }
 
-    for (let file of req.files) {
-      let filePromise = File.create({
-        path: `${file.destination}/${file.originalname}`,
-      }).then(new_file => {
-        return User_File.create({
-          user: user.id,
-          data: new_file.id,
-        }).then(user_file => {
-          files.push({
-            user: user.username,
-            file: file,
-            user_file: user_file,
+      let files = [];
+      let filePromises = [];
+
+      for (let file of req.files) {
+        let filePromise = File.create({
+          path: `${file.destination}/${file.originalname}`,
+        }).then(new_file => {
+          return User_File.create({
+            user: toUser.id,
+            data: new_file.id,
+          }).then(user_file => {
+            files.push({
+              user: toUser.username,
+              file: file,
+              user_file: user_file,
+            });
+          }).catch(err => {
+            debug(err);
+            res.status(500).send(response_text["500"]);
+            return;
           });
         }).catch(err => {
           debug(err);
           res.status(500).send(response_text["500"]);
           return;
         });
+        filePromises.push(filePromise);
+      }
+
+      Promise.all(filePromises).then(() => {
+        res.send(files);
       }).catch(err => {
         debug(err);
         res.status(500).send(response_text["500"]);
-        return;
-      });
-      filePromises.push(filePromise);
-    }
-
-    Promise.all(filePromises).then(() => {
-      res.send(files);
+      })
     }).catch(err => {
       debug(err);
       res.status(500).send(response_text["500"]);
-    })
-  }).catch(err => {
+      return;
+    });
+  }).catch((err) => {
     debug(err);
     res.status(500).send(response_text["500"]);
     return;
