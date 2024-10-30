@@ -21,27 +21,19 @@ router.get("/:id", (req, res) => {
                 data: req.params.id,
             }
         }).then(user_link => {
-            if (!user_link) {
-                res.status(404).send(response_text["404"]);
-                return;
-            }
-
-            Link.findByPk(user_link.data).then(link => {
-                res.redirect(link.dest);
+            Link.findOne({
+                where: {
+                    id: req.params.id,
+                },
+            }).then(link => {
+                res.send(link);
             }).catch(err => {
-                debug(err);
-                res.status(500).send(response_text["500"]);
-                return;
+                res.status(404).send(response_text["404"]);
             });
         }).catch(err => {
-            debug(err);
-            res.status(500).send(response_text["500"]);
-            return;
+            debug(err.message);
+            res.status(403).send(response_text["403"]);
         });
-    }).catch(err => {
-        debug(err);
-        res.status(500).send(response_text["500"]);
-        return;
     });
 });
 
