@@ -9,10 +9,7 @@ const cors = require("cors");
 app = express();
 
 // Installed middleWare
-app.use(cors({
-    credentials: true,
-    origin: ["localhost:8080"],
-}));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
