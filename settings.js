@@ -23,10 +23,10 @@ exports.max_link_char = 128; //TODO: create validation for this
 
 exports.max_user_link_char = 128; //TODO: create validation for this
 
-exports.file_expire_days = 1;
+exports.file_expire_days = (1) * 86_400 * 1_000;
 
-exports.text_expire_days = 1;
+exports.text_expire_days = (1) * 86_400 * 1_000;
 
-exports.link_expire_days = 1;
+exports.link_expire_days = (1) * 86_400 * 1_000;
 
 exports.base_root_dir = __dirname;
