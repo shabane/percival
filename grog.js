@@ -43,3 +43,12 @@ list_expire_entries(File).then(files => {
         settings.debug(data);
     }).catch(err => settings.debug(err.message));
 });
+
+
+for (let type of [Text, Link, User_Data, User_Link, User_File]) {
+    list_expire_entries(type).then(exp => {
+        Promise.all(delete_expire_entries(exp)).then(data => {
+            settings.debug(data);
+        }).catch(err => settings.debug(err.message));
+    });
+}
