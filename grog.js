@@ -37,3 +37,9 @@ function delete_expire_entries(entries, is_file = false) {
     }
     return filePromises
 }
+
+list_expire_entries(File).then(files => {
+    Promise.all(delete_expire_entries(files, true)).then(data => {
+        settings.debug(data);
+    }).catch(err => settings.debug(err.message));
+});
