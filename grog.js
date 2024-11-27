@@ -45,7 +45,7 @@ list_expire_entries(File).then(files => {
 });
 
 setInterval(() => {
-    for (let type of [Text, Link, User_Data, User_Link, User_File]) {
+    for (let type of [File, Text, Link, User_Data, User_Link, User_File]) {
         list_expire_entries(type).then(exp => {
             Promise.all(delete_expire_entries(exp)).then(data => {
                 settings.debug(data);
