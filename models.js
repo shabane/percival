@@ -128,6 +128,12 @@ exports.User_File = settings.sequelize.define(
             allowNull: false,
             required: true,
             defaultValue: "Anonymus",
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            required: true,
+            defaultValue: "unNamedFile",
         }
     },
     { timestamps: true },
