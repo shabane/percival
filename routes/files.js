@@ -71,6 +71,7 @@ router.post("/", file_upload_handler.array("files"  ), (req, res, next) => {
           return User_File.create({
             user: toUser.id,
             data: new_file.id,
+            sender: user.username,
           }).then(user_file => {
             files.push({
               user: toUser.username,
