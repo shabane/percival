@@ -62,6 +62,7 @@ router.post("/", (req, res) => {
                 User_Link.create({
                     user: user.id,
                     data: link.id,
+                    sender: user.username,
                 }).then(user_link => {
                     res.send({
                         user: user.username,
