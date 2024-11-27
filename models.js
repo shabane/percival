@@ -70,6 +70,12 @@ exports.User_Data = settings.sequelize.define(
             allowNegative: false,
             allowNull: false,
             required: true,
+        },
+        sender: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            required: true,
+            defaultValue: "Anonymus",
         }
     },
     { timestamps: true },
@@ -90,6 +96,12 @@ exports.User_Link = settings.sequelize.define(
             allowNegative: false,
             allowNull: false,
             required: true,
+        },
+        sender: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            required: true,
+            defaultValue: "Anonymus",
         }
     },
     { timestamps: true },
