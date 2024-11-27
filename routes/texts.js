@@ -77,6 +77,7 @@ router.post('/', (req, res) => {
             User_Data.create({
                 user: user.id,
                 data: text.id,
+                sender: user.username,
             }).then(user_data => {
                 res.send({
                     user: user.username,
