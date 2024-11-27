@@ -110,6 +110,12 @@ exports.User_File = settings.sequelize.define(
             allowNegative: false,
             allowNull: false,
             required: true,
+        },
+        sender: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            required: true,
+            defaultValue: "Anonymus",
         }
     },
     { timestamps: true },
